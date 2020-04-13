@@ -70,7 +70,6 @@ def connect_triangles_strip():
     polys = vtk.vtkCellArray()
 
     # src: https://stackoverflow.com/questions/28375338/cube-using-single-gl-triangle-strip
-    # Not working... :'(
     strip = [3, 7, 1, 5, 4, 7, 6, 3, 2, 1, 0, 4, 2, 6]
 
     polys.InsertNextCell(len(strip))
@@ -101,19 +100,21 @@ if __name__ == '__main__':
                 points.InsertPoint(noVertex, (i, j, k))
                 noVertex += 1
 
-    # FIXME: to test the creation with different topology, uncomment the line to be tested
-    polys = connect_square()
-    # polys = connect_triangles()
-    # polys = connect_triangles_strip()
-
     scalars = vtk.vtkFloatArray()
     for i in range(8):
         scalars.InsertTuple1(i, i)
 
     cube = vtk.vtkPolyData()
     cube.SetPoints(points)
-    cube.SetPolys(polys)
     cube.GetPointData().SetScalars(scalars)
+
+    # FIXME: To test the creation with different topology, uncomment the line to be tested
+    # FIXME: Be aware to comment the SetPolys method and uncomment SetStrips if you use connect_triangles_strip
+    polys = connect_square()
+    # polys = connect_triangles()
+    cube.SetPolys(polys)
+    # polys = connect_triangles_strip()
+    # cube.SetStrips(polys)
 
     # The file cube.vtk was generated with the squares in the cell array
     # The file cube_triangles.vtk was generated with the triangles in the cell array
